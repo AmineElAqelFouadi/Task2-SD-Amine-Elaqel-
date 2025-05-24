@@ -1,0 +1,22 @@
+import json
+
+def lambda_handler(event, context):
+    print("Evento recibido:", json.dumps(event))
+
+    insultos = ["tonto", "bobo"]  # lista de insultos
+
+    for record in event.get('Records', []):
+        body = record.get('body', '{}')
+        message = json.loads(body)
+        texto = message.get('text', '')
+        print(f"Texto recibido: '{texto}'")
+
+        texto_filtrado = " ".join(
+            ["CENSURADO" if palabra.lower() in insultos else palabra for palabra in texto.split()]
+        )
+        print(f"Texto filtrado: '{texto_filtrado}'")
+
+    return {
+        'statusCode': 200,
+        'body': json.dumps('Procesado correctamente.')
+    }
